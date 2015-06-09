@@ -1,0 +1,4 @@
+cassandra-driver>=1.0.2
+Flask>=0.10.1
+requests>=1.2.3,<=2.0.1
+time_uuid>=0.1.1
