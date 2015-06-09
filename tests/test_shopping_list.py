@@ -30,4 +30,4 @@ class TestShoppingList :
 
     def test_get_shopping_list_without_user_id(self):
         res = requests.get(REST_SERVER + '/shopping_list/')
-        assert res.status_code == 200
+        assert res.status_code == 404
