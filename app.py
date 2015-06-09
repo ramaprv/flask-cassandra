@@ -28,8 +28,8 @@ set up all the routes.
 app = Flask(__name__)
 session = _connect_to_cassandra('sensorapp')
 
-@app.route('/shopping_list', methods=['GET'])
-def get_shopping_list():
+@app.route('/shopping_list/<user_id>', methods=['GET'])
+def get_shopping_list(user_id):
     """
     Fetch shopping_list
     """
@@ -49,8 +49,8 @@ def get_shopping_list():
         ts = time_uuid.TimeUUID(str(r.time))
         dt = str(ts.get_datetime())
         reply['results'].append({ 'item' : str(r.item),
-                               'quantity': str(r.quantity),
-                               'created_at': str(created_at) })
+                                  'quantity': str(r.quantity),
+                                  'created_at': str(created_at) })
     return json.dumps(reply)
 
 @app.route('/shopping_list', methods=['POST'])

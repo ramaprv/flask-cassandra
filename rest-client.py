@@ -29,7 +29,7 @@ def fetch_data():
     """
     user_id = raw_input("user id: ")
 
-    res = requests.get(REST_SERVER + '/shopping_list', params=user_id)
+    res = requests.get(REST_SERVER + '/shopping_list/'+user_id)
     return json.loads(res.text)
 
 
