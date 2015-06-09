@@ -26,7 +26,7 @@ Create the Flask application, connect to Cassandra, and then
 set up all the routes.
 """
 app = Flask(__name__)
-session = _connect_to_cassandra('sensorapp')
+session = _connect_to_cassandra('shop')
 
 @app.route('/shopping_list/<user_id>', methods=['GET'])
 def get_shopping_list(user_id):
