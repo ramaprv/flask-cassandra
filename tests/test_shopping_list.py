@@ -31,3 +31,11 @@ class TestShoppingList :
     def test_get_shopping_list_without_user_id(self):
         res = requests.get(REST_SERVER + '/shopping_list/')
         assert res.status_code == 404
+
+    def test_update_shopping_list_with_invalid_id(self):
+        res = requests.put(REST_SERVER + '/shopping_list/abcd')
+        assert res.status_code == 200
+
+    def test_delete_shopping_list_with_invalid_id(self):
+        res = requests.delete(url, **kwargs)(REST_SERVER + '/shopping_list/abcd')
+        assert res.status_code == 200
