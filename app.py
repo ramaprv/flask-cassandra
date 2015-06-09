@@ -1,84 +1,60 @@
-import datetime
 import json
 import os
 import time_uuid
-import uuid
-from cassandra.cluster import Cluster
+import datetime
+
 from flask import Flask, request
+from cqlengine import connection
+from cqlengine.management import sync_table
+from models import Shopping_List
 
-def _connect_to_cassandra(keyspace):
-    """
-    Connect to the Cassandra cluster and return the session.
-    """
-
-    if 'CASSANDRA_URL' in os.environ:
-        host = os.environ['CASSANDRA_URL']
-    else:
-        host = 'localhost'
-
-    cluster = Cluster([host])
-    session = cluster.connect(keyspace)
-
-    return session
 
 """
 Create the Flask application, connect to Cassandra, and then
 set up all the routes.
 """
 app = Flask(__name__)
-session = _connect_to_cassandra('shop')
 
-@app.route('/shopping_list/<user_id>', methods=['GET'])
-def get_shopping_list(user_id):
+"""
+Connect to the demo keyspace on our cluster running at 127.0.0.1
+"""
+
+connection.setup(['127.0.0.1'], "shop")
+sync_table(Shopping_List)
+
+
+@app.route('/shopping_list/<id>', methods=['GET'])
+def get_shopping_list(id):
     """
     Fetch shopping_list
     """
+    query = Shopping_List.objects(user_id=int(id))
+    if query.count > 0:
+        data = { 'results' : [] }
+        i = 0
+        for instance in query:
+            data['results'].append(instance)
+            i += 1
+            if i == query.count():
+                return str(data)
+    else:
+        return json.dumps({'success':False,'results':'Empty Shopping List'})
 
-    user_id = str(request.args['user_id'])
-
-
-    query = """SELECT * FROM shopping_list
-               WHERE user_id=%(user_id)s
-               ORDER BY created_at DESC"""
-
-    values = { 'user_id': user_id }
-
-    rows = session.execute(query, values)
-    reply = { 'results' : [] }
-    for r in rows:
-        ts = time_uuid.TimeUUID(str(r.time))
-        dt = str(ts.get_datetime())
-        reply['results'].append({ 'item' : str(r.item),
-                                  'quantity': str(r.quantity),
-                                  'created_at': str(created_at) })
-    return json.dumps(reply)
 
 @app.route('/shopping_list', methods=['POST'])
-def put_shopping_list():
+def post_shopping_list():
     """
     Insert shopping_list
     """
 
-    user_id = str(request.args['user_id'])
-    item = str(request.args['item'])
-    quantity = float(request.args['quantity'])
+    data = json.loads(request.data)
+    user_id = int(data['user_id'])
+    item = ''.join(str(e) for e in data['item'])
+    quantity = int(data['quantity'])
 
-    day = datetime.datetime.utcnow() - datetime.timedelta(days=days)
-    timestamp = time_uuid.TimeUUID.with_utc(day, randomize=False, lowest_val=True)
+    Shopping_List.create(user_id=user_id, item=item, quantity=quantity)
 
-    query = """INSERT INTO shopping_list
-               (user_id, created_at, item, quantity)
-               VALUES (%(user_id)s, %(created_at)s, %(item)s, %(quantitiy)f)"""
-
-    values = { 'user_id': user_id,
-               'created_at': timestamp,
-               'item': item,
-               'quantity': quantity }
-
-    session.execute(query, values)
-
-    reply = { 'result' : values }
-    return json.dumps(reply)
+    return json.dumps({'success':True})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

@@ -12,15 +12,20 @@ def post_data():
     Post some data to the REST server.
     """
 
-     user_id = raw_input("user_id : ")
-     item = raw_input("item : ")
-     quantity = raw_input("quantity : ")
-     values = { 'user_id' : user_id,
+    user_id = raw_input("user_id : ")
+    item = raw_input("item : ")
+    quantity = raw_input("quantity : ")
+    values = {  'user_id' : int(user_id),
                 'item' : item,
-                'quantity' : quantity }
+                'quantity' : int(quantity) }
     # Post the data to the webserver.
-    res = requests.post(REST_SERVER + '/shopping_list', data=values)
-    return json.loads(res.text)
+    print values
+    res = requests.post(REST_SERVER + '/shopping_list', data=json.dumps(values))
+    print(res.status_code, res.reason)
+    if res.status_code == 200:
+        return(res.text)
+    else:
+        return (res.status_code)
 
 
 def fetch_data():
@@ -29,24 +34,21 @@ def fetch_data():
     """
     user_id = raw_input("user id: ")
 
-    res = requests.get(REST_SERVER + '/shopping_list/'+user_id)
-    return json.loads(res.text)
+    res = requests.get(REST_SERVER + '/shopping_list/{}'.format(user_id))
+    print(res.status_code, res.reason)
+    if res.status_code == 200:
+        return(res.text)
+    else:
+        return (res.status_code)
 
 
 def main(argv=None):
     if argv[1] == 'post':
         data = post_data()
-        print json.dumps(data,
-                         sort_keys=True,
-                         indent=2,
-                         separators=(',',':'))
+        print data
     elif argv[1] == 'fetch':
         data = fetch_data()
-        print json.dumps(data,
-                         sort_keys=True,
-                         indent=2,
-                         separators=(',',':'))
-
+        print data
 if __name__ == '__main__':
     # So that we don't get so many random warnings.
     requests_log = logging.getLogger("requests")
