@@ -1,4 +1,4 @@
-CREATE KEYSPACE shop WITH REPLICATION = { 'class' : 'SimpleShop', 'replication_factor' : 1 };
+CREATE KEYSPACE shop WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 USE shop;
 
 CREATE TABLE shopping_list (
