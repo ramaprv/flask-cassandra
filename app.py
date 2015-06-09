@@ -3,6 +3,7 @@ import os
 import time_uuid
 import datetime
 
+from uuid import UUID
 from flask import Flask, request
 from cqlengine import connection
 from cqlengine.management import sync_table
@@ -21,6 +22,20 @@ Connect to the demo keyspace on our cluster running at 127.0.0.1
 
 connection.setup(['127.0.0.1'], "shop")
 sync_table(Shopping_List)
+
+
+def _validate_uuid4(uuid_string):
+    """
+    Validate that a UUID string is in
+    fact a valid uuid4.
+    """
+
+    try:
+        val = UUID(uuid_string, version=4)
+    except ValueError:
+        return False
+
+    return val.hex == uuid_string
 
 
 @app.route('/shopping_list/<id>', methods=['GET'])
@@ -74,36 +89,39 @@ def post_shopping_list():
 
 
 @app.route('/shopping_list/<id>', methods=['PUT'])
-def update_shopping_list():
+def update_shopping_list(id):
     """
     Update shopping_list
     """
-    data = json.loads(request.data)
-    update_param = ''
 
-    query = Shopping_List.get(id=int(id))
-    if query.count > 0:
+    if _validate_uuid4(id):
+        data = json.loads(request.data)
+        update_param = ''
+
+        query = Shopping_List.get(id=id)
         if hasattr(data, 'item'):
-            update_param += 'item={}'.format(''.join(str(e) for e in data['item']))
+            item = ''.join(str(e) for e in data['item'])
+            query.update(item=item)
         if hasattr(data, 'quantity'):
-            update_param += 'quantity={}'.format(int(data['quantity']))
-        query.update(update_param)
+            quantity = int(data['quantity'])
+            query.update(quantity=quantity)
         return json.dumps({'success':True,'result':'Shopping list updated'})
     else:
-        return json.dumps({'success':False,'result':'Invalid Shopping List id'})
+        return json.dumps({'success':False,'result':'Invalid shopping list id'})
 
 
 @app.route('/shopping_list/<id>', methods=['DELETE'])
-def delete_shopping_list():
+def delete_shopping_list(id):
     """
     Delete shopping_list
     """
-    query = Shopping_List.get(id=int(id))
-    if query.count > 0:
+
+    if _validate_uuid4(id):
+        query = Shopping_List.get(id=id)
         query.delete()
-        return json.dumps({'success':False,'result':'Shopping list deleted'})
+        return json.dumps({'success':True,'result':'Shopping list deleted'})
     else:
-        return json.dumps({'success':False,'result':'Invalid Shopping List id'})
+        return json.dumps({'success':False,'result':'Invalid shopping list id'})
 
 
 if __name__ == '__main__':
