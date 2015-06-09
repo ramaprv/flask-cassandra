@@ -1,5 +1,6 @@
-cassandra-driver>=1.0.2
-Flask>=0.10.1
+cassandra-driver==1.0.2
+Flask==0.10.1
 requests>=1.2.3,<=2.0.1
-time_uuid>=0.1.1
-cqlengine>=0.21.0
+time_uuid==0.1.1
+cqlengine==0.21.0
+pytest==2.7.0

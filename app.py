@@ -28,6 +28,7 @@ def get_shopping_list(id):
     """
     Fetch shopping_list
     """
+
     query = Shopping_List.objects(user_id=int(id))
     if query.count > 0:
         data = { 'results' : [] }
@@ -38,7 +39,7 @@ def get_shopping_list(id):
             if i == query.count():
                 return str(data)
     else:
-        return json.dumps({'success':False,'results':'Empty Shopping List'})
+        return json.dumps({'success':True,'results':'Empty Shopping List'})
 
 
 @app.route('/shopping_list', methods=['POST'])
@@ -48,9 +49,21 @@ def post_shopping_list():
     """
 
     data = json.loads(request.data)
-    user_id = int(data['user_id'])
-    item = ''.join(str(e) for e in data['item'])
-    quantity = int(data['quantity'])
+
+    if hasattr(data, 'user_id'):
+        user_id = int(data['user_id'])
+    else:
+        return json.dumps({'success':False})
+
+    if hasattr(data, 'item'):
+        item = ''.join(str(e) for e in data['item'])
+    else:
+        return json.dumps({'success':False})
+
+    if hasattr(data, 'quantity'):
+        quantity = int(data['quantity'])
+    else:
+        return json.dumps({'success':False})
 
     Shopping_List.create(user_id=user_id, item=item, quantity=quantity)
 
