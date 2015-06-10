@@ -40,7 +40,7 @@ def get_shopping_list(id):
                                      'quantity' : instance.quantity })
             i += 1
             if i == query.count():
-                return make_response(jsonify(data), 200)
+                return make_response(jsonify({'success':True,'results':data}), 200)
     else:
         return make_response(jsonify({'success':True,'results':'Empty Shopping List'}), 204)
 

@@ -14,6 +14,7 @@ class TestShoppingList :
 
         res = requests.post(REST_SERVER + '/shopping_list', data=json.dumps(values))
         assert res.status_code == 400
+        assert json.loads(res.content)['success'] == False
 
     def test_post_shopping_list_with_complete_data(self):
         values = {  'user_id' : 1,
@@ -23,10 +24,12 @@ class TestShoppingList :
 
         res = requests.post(REST_SERVER + '/shopping_list', data=json.dumps(values))
         assert res.status_code == 201
+        assert json.loads(res.content)['success'] == True
 
     def test_get_shopping_list_with_user_id(self):
         res = requests.get(REST_SERVER + '/shopping_list/{}'.format(1))
         assert res.status_code == 200
+        assert json.loads(res.content)['success'] == True
 
     def test_get_shopping_list_without_user_id(self):
         res = requests.get(REST_SERVER + '/shopping_list/')
