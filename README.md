@@ -1,6 +1,6 @@
 # flask-cassandra
 
-Python Flask Cassandra Simple Shop CR
+Python Flask Cassandra Simple Shop CRUD
 ==================
 
 This is a collection of simple and illustrative Cassandra Shop application. The purpose of this collection is to help new Cassandra users better understand Cassandra and to present illustrative use cases. 
