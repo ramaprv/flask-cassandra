@@ -22,21 +22,6 @@ def _validate_uuid4(uuid_string):
 
     return val.hex == uuid_string
 
-@auth.error_handler
-def unauthorized():
-    return make_response(jsonify( { 'error': 'Unauthorized access' } ), 403)
-    # return 403 instead of 401 to prevent browsers from displaying the default auth dialog
-
-
-@app.errorhandler(400)
-def not_found(error):
-    return make_response(jsonify( { 'error': 'Bad request' } ), 400)
-
-
-@app.errorhandler(404)
-def not_found(error):
-    return make_response(jsonify( { 'error': 'Not found' } ), 404)
-
 
 @api.route('/shopping_list/<id>', methods=['GET'])
 def get_shopping_list(id):
@@ -68,24 +53,14 @@ def post_shopping_list():
 
     data = json.loads(request.data)
 
-    if hasattr(data, 'user_id'):
+    if 'user_id' in data and 'item' in data and 'quantity' in data:
         user_id = int(data['user_id'])
-    else:
-        return make_response(jsonify({'success':False,'result':'User id is empty'}), 400)
-
-    if hasattr(data, 'item'):
         item = ''.join(str(e) for e in data['item'])
-    else:
-        return make_response(jsonify({'success':False,'result':'Item is empty'}), 400)
-
-    if hasattr(data, 'quantity'):
         quantity = int(data['quantity'])
+        ShoppingList.create(user_id=user_id, item=item, quantity=quantity)
+        return make_response(jsonify({'success':True,'result':'Shopping List Created'}), 201)
     else:
-        return make_response(jsonify({'success':False,'result':'Quantity is empty'}), 400)
-
-    ShoppingList.create(user_id=user_id, item=item, quantity=quantity)
-
-    return make_response(jsonify({'success':True,'result':'Shopping List Created'}), 201)
+        return make_response(jsonify({'success':False,'result':'Incomplete parameters'}), 400)
 
 
 @api.route('/shopping_list/<id>', methods=['PUT'])
@@ -105,7 +80,7 @@ def update_shopping_list(id):
         if hasattr(data, 'quantity'):
             quantity = int(data['quantity'])
             query.update(quantity=quantity)
-        return make_response(jsonify({'success':True,'result':'Shopping list updated'}), 201)
+        return make_response(jsonify({'success':True,'result':'Shopping list updated'}), 205)
     else:
         return make_response(jsonify({'success':False,'result':'Invalid shopping list id'}), 400)
 
