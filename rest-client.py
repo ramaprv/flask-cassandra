@@ -20,7 +20,7 @@ def post_data():
                 'quantity' : int(quantity) }
     # Post the data to the webserver.
     print values
-    res = requests.post(REST_SERVER + '/shopping_list', data=json.dumps(values))
+    res = requests.post(REST_SERVER + '/api/shopping_list', data=json.dumps(values))
     if res.status_code == 200:
         return(res.text)
     else:
@@ -33,7 +33,7 @@ def fetch_data():
     """
     user_id = raw_input("user id: ")
 
-    res = requests.get(REST_SERVER + '/shopping_list/{}'.format(user_id))
+    res = requests.get(REST_SERVER + '/api/shopping_list/{}'.format(user_id))
     if res.status_code == 200:
         return(res.text)
     else:
@@ -46,7 +46,7 @@ def fetch_data():
     """
     user_id = raw_input("user id: ")
 
-    res = requests.get(REST_SERVER + '/shopping_list/{}'.format(user_id))
+    res = requests.get(REST_SERVER + '/api/shopping_list/{}'.format(user_id))
     if res.status_code == 200:
         return(res.text)
     else:
@@ -76,7 +76,7 @@ def delete_data():
     """
     shopping_list_id = raw_input("shopping list id: ")
 
-    res = requests.delete(REST_SERVER + '/shopping_list/{}'.format(shopping_list_id))
+    res = requests.delete(REST_SERVER + '/api/shopping_list/{}'.format(shopping_list_id))
     if res.status_code == 200:
         return(res.text)
     else:

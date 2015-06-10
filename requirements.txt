@@ -3,3 +3,6 @@ requests>=1.2.3,<=2.0.1
 time_uuid>=0.1.1
 cqlengine>=0.21.0
 pytest==2.7.0
+flask-login==0.2.11
+flask-mail==0.9.1
+flask-script==2.0.5

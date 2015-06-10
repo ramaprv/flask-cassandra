@@ -3,7 +3,7 @@ from cqlengine import columns
 from cqlengine.models import Model
 
 
-class Shopping_List(Model):
+class ShoppingList(Model):
   id = columns.UUID(primary_key=True, default=uuid.uuid4)
   user_id = columns.Integer(index=True)
   item = columns.Text()
