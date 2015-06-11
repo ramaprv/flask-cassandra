@@ -17,8 +17,9 @@ FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
 FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
 FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 DEBUG = True
-CASSANDRA_KEYSPACE = 'shop' 
+CASSANDRA_KEYSPACE = 'shop'
 CASSANDRA_HOSTS = ['127.0.0.1']
+CQLENG_ALLOW_SCHEMA_MANAGEMENT = 'CQLENG_ALLOW_SCHEMA_MANAGEMENT'
 
 @staticmethod
 def init_app(app):

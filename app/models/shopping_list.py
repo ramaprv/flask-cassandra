@@ -1,6 +1,6 @@
 import uuid
-from cqlengine import columns
-from cqlengine.models import Model
+from cassandra.cqlengine import columns
+from cassandra.cqlengine.models import Model
 
 
 class ShoppingList(Model):

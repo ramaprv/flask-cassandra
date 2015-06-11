@@ -27,10 +27,13 @@ class DevelopmentConfig(Config):
     DEBUG = True
     CASSANDRA_KEYSPACE = 'shop'
     CASSANDRA_HOSTS = ['127.0.0.1']
+    CQLENG_ALLOW_SCHEMA_MANAGEMENT = 'CQLENG_ALLOW_SCHEMA_MANAGEMENT'
+
 
 class ProductionConfig(Config):
     CASSANDRA_KEYSPACE = 'shop'
     CASSANDRA_HOSTS = ['127.0.0.1']
+    CQLENG_ALLOW_SCHEMA_MANAGEMENT = 'CQLENG_ALLOW_SCHEMA_MANAGEMENT'
 
     @classmethod
     def init_app(cls, app):

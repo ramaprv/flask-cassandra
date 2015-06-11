@@ -6,3 +6,4 @@ pytest==2.7.0
 flask-login==0.2.11
 flask-mail==0.9.1
 flask-script==2.0.5
+redis==2.10.3
