@@ -6,6 +6,66 @@ import sys
 
 REST_SERVER = 'http://localhost:5000'
 
+def signup_data():
+    """
+    Post new user to the REST server.
+    """
+
+    handle = raw_input("handle : ")
+    password = raw_input("password : ")
+    phone = raw_input("phone : ")
+    values = {  'handle' : str(handle),
+                'password' : str(password),
+                'phone' : int(phone) }
+    # Post the data to the webserver.
+    print values
+    res = requests.post(REST_SERVER + '/api/signup', data=json.dumps(values))
+    if res.status_code == 201:
+        return(res.text)
+    else:
+        return (res.status_code)
+
+
+def login_data():
+    """
+    User login to the REST server.
+    """
+
+    handle = raw_input("handle : ")
+    password = raw_input("password : ")
+    values = {  'handle' : str(handle),
+                'password' : str(password) }
+    # Post the data to the webserver.
+    print values
+    res = requests.post(REST_SERVER + '/api/login', data=json.dumps(values))
+    if res.status_code == 202:
+        return(res.text)
+    else:
+        return (res.status_code)
+
+def logout_data():
+    """
+    User logout off the REST server.
+    """
+
+    res = requests.get(REST_SERVER + '/api/logout')
+    if res.status_code == 202:
+        return(res.text)
+    else:
+        return (res.status_code)
+
+
+def check_login_data():
+    """
+    User Login Check the REST server.
+    """
+
+    res = requests.get(REST_SERVER + '/api/')
+    if res.status_code == 200:
+        return(res.text)
+    else:
+        return (res.status_code)
+
 
 def post_data():
     """
@@ -82,6 +142,18 @@ def main(argv=None):
         print data
     elif argv[1] == 'delete':
         data = delete_data()
+        print data
+    elif argv[1] == 'signup':
+        data = signup_data()
+        print data
+    elif argv[1] == 'login':
+        data = login_data()
+        print data
+    elif argv[1] == 'logout':
+        data = logout_data()
+        print data
+    elif argv[1] == 'check':
+        data = check_login_data()
         print data
 
 if __name__ == '__main__':

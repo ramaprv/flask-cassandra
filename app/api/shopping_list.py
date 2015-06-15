@@ -37,7 +37,8 @@ def get_shopping_list(id):
             data['results'].append({ 'id' : instance.id,
                                      'user_id' : instance.user_id,
                                      'item' : instance.item,
-                                     'quantity' : instance.quantity })
+                                     'quantity' : instance.quantity,
+                                     'created_at' : instance.created_at })
             i += 1
             if i == query.count():
                 return make_response(jsonify({'success':True,'results':data['results']}), 200)
@@ -71,15 +72,12 @@ def update_shopping_list(id):
 
     if _validate_uuid4(id):
         data = json.loads(request.data)
-        update_param = ''
-
-        query = ShoppingList.get(id=id)
         if hasattr(data, 'item'):
             item = ''.join(str(e) for e in data['item'])
-            query.update(item=item)
+            ShoppingList.iff(id=id).update(item=item)
         if hasattr(data, 'quantity'):
             quantity = int(data['quantity'])
-            query.update(quantity=quantity)
+            ShoppingList.iff(id=id).update(quantity=quantity)
         return make_response(jsonify({'success':True,'result':'Shopping list updated'}), 205)
     else:
         return make_response(jsonify({'success':False,'result':'Invalid shopping list id'}), 400)

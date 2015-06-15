@@ -5,12 +5,13 @@ from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
 
-class ShoppingList(Model):
+class User(Model):
   id = columns.UUID(primary_key=True, default=uuid.uuid4)
-  user_id = columns.Integer(index=True)
-  item = columns.Text()
-  quantity = columns.Integer()
+  handle = columns.Text(index=True)
+  password = columns.Text(required=True)
+  email = columns.Text(required=False)
+  phone = columns.Integer(required=False)
   created_at = columns.DateTime(default=datetime.datetime.now)
 
   def __repr__(self):
-    return '%d %s %d' % (self.user_id, self.item, self.quantity)
+    return '%s %s %d' % (self.handle, self.email, self.phone)

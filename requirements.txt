@@ -7,3 +7,4 @@ flask-login==0.2.11
 flask-mail==0.9.1
 flask-script==2.0.5
 redis==2.10.3
+flask-sessions==0.1.5

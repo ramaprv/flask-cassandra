@@ -9,7 +9,7 @@ from cassandra.cqlengine import connection
 from cassandra.cqlengine.management import sync_table
 from cassandra.cqlengine.management import drop_table
 
-from models import ShoppingList
+from models import ShoppingList, User
 
 def _get_default_config_path():
     for name in ("prod.py", "dev.py"):
@@ -63,6 +63,7 @@ def setup_connections(config):
     hosts = config.CASSANDRA_HOSTS
     _setup_cassandra(hosts=hosts, keyspace=keyspace)
     _set_env_vars(config)
+    sync_tables()
 
 
 def get_redis_client(host='localhost', port=6379, db=0):
@@ -78,7 +79,7 @@ def sync_tables():
     """Sync all models to tables.
     """
     sync_table(ShoppingList)
-
+    sync_table(User)
 
 def drop_tables():
     """Drop all tables in the keyspace.
@@ -86,3 +87,4 @@ def drop_tables():
     Note: Use this with care!.
     """
     drop_table(ShoppingList)
+    drop_table(User)
